@@ -23,7 +23,7 @@ conda activate modern
 ```
 
 ## Preprocessing
-We put all the hexagon/tessellation ids in a single file and then use the `transformers` library to train a tokenizer on the data. The tokenizer is then used to tokenize the data and save it in a format that can be used by the `transformers` library.
+We put all the hexagon/tessellation ids in a single file and then use the `transformers` library to train a tokenizer on the corpus. The tokenizer is then used to in training the model as a pre-trained tokenizer.
 
 ```bash
 python preprocess.py
