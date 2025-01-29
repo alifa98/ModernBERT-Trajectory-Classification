@@ -2,6 +2,7 @@ from transformers import PreTrainedTokenizerFast
 from transformers import ModernBertConfig, ModernBertForSequenceClassification
 from transformers import TrainingArguments, Trainer
 from transformers import DataCollatorWithPadding
+from transformers import EarlyStoppingCallback
 from datasets import load_dataset
 
 import torch
@@ -63,9 +64,13 @@ training_args = TrainingArguments(
     save_strategy="epoch",
     per_device_train_batch_size=50,
     per_device_eval_batch_size=50,
-    num_train_epochs=5,
+    num_train_epochs=300,
     logging_dir="./logs",
-    logging_steps=100
+    logging_steps=100,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+    save_total_limit=3
 )
 
 # 9) Data collator
@@ -77,8 +82,12 @@ trainer = Trainer(
     args=training_args,
     train_dataset=dataset["train"],
     eval_dataset=dataset["test"],
-    data_collator=data_collator
+    data_collator=data_collator,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
 )
 
 trainer.train()
-model.save_pretrained("./modernbert-ho-traj-classifier")
+
+# This saves the *best* model (since load_best_model_at_end=True, 
+# the trainer model is the best checkpoint at the end of training)
+trainer.save_model("./modernbert-ho-traj-classifier")
