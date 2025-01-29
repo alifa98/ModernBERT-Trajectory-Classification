@@ -4,12 +4,15 @@ from transformers import TrainingArguments, Trainer
 from transformers import DataCollatorWithPadding
 from datasets import load_dataset
 
+import torch
+torch.set_float32_matmul_precision('high')
+
 # 1) Load your tokenizer
 tokenizer = PreTrainedTokenizerFast.from_pretrained("./ho-sequence-tokenizer")
 
 # 2) Load the dataset and filter
-# dataset = load_dataset("csv", data_files="/local/data1/shared_data/higher_order_trajectory/rome/ho_rome_res8.csv")
-dataset = load_dataset("csv", data_files="cut_rome_testi.csv")
+dataset = load_dataset("csv", data_files="/local/data1/shared_data/higher_order_trajectory/rome/ho_rome_res8.csv")
+# dataset = load_dataset("csv", data_files="cut_rome_testi.csv")
 
 def filter_short_sequences(example):
     return len(example["higher_order_trajectory"].split()) > 10
