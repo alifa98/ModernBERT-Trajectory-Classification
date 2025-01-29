@@ -55,7 +55,7 @@ config = ModernBertConfig(
 model = ModernBertForSequenceClassification(config)
 
 # 7) Split data
-dataset = dataset["train"].train_test_split(test_size=0.2)
+dataset = dataset["train"].train_test_split(test_size=0.2, seed=42)
 
 # 8) Trainer args
 training_args = TrainingArguments(
